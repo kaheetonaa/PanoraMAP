@@ -1,4 +1,5 @@
-# PanoraMap(Pan-O-rama  project) - a project for Crowdsourced Street View Imagery assessment/validation
+# PanoraMap(Pan-O-rama  project)
+# </em>A project for Crowdsourced Street View Imagery assessment/validation</em>
 Wiki: https://github.com/kaheetonaa/Pan-O-rama.wiki.git
 Presentation: https://docs.google.com/presentation/d/1QTvAqIEw_X0f9hi4JYJbacVpvqu1IW7LEpg4G0sJ9YI/edit#slide=id.g16e523f8eaa_0_5
 
