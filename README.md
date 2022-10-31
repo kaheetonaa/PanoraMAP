@@ -7,15 +7,23 @@ Presentation: https://docs.google.com/presentation/d/1QTvAqIEw_X0f9hi4JYJbacVpvq
 
 
 ## Installation
+### Label Studio
 Firstly, install "Label Studio" by following official instruction at [Label Studio Community Version Installation](https://labelstud.io/guide/install.html) <br>
 Label Studio can be installed both by pip and Docker.<br>
 
 After installing, run Label Studio. If using pip, run <br>
 ``label studio``
 
+Label Studio should be start at port 8080
+
 ![Step 1: Start the server](Assets/Guide/01-start-server.png)
 
 ![Step 2: Interface](Assets/Guide/02-Label-Studio-Interface.png)
+
+### Ngrok
+Install Ngrok through official instruction in [Ngrok installation instruction](https://ngrok.com/download) <br>
+Distribute Label studio by typing <br>
+``ngrok http 8080``
 
 ## Building Framework
 
