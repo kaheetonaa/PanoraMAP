@@ -1,4 +1,7 @@
 # PanoraMap(Pan-O-rama  project) - a project for Crowdsourced Street View Imagery assessment/validation
+Wiki: https://github.com/kaheetonaa/Pan-O-rama.wiki.git
+Presentation: https://docs.google.com/presentation/d/1QTvAqIEw_X0f9hi4JYJbacVpvqu1IW7LEpg4G0sJ9YI/edit#slide=id.g16e523f8eaa_0_5
+
 
 ## Installation
 Firstly, install "Label Studio" by following official instruction at [Label Studio Community Version Installation](https://labelstud.io/guide/install.html)
@@ -11,6 +14,8 @@ After installing, run Label Studio. If using pip, run
 
 ![Step 2: Interface](Assets/Guide/02-Label-Studio-Interface.png)
 
-## Working
+## Building Framework
+
+## Testing Framework
 
 
