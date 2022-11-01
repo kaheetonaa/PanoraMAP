@@ -1,7 +1,7 @@
 # PanoraMap(Pan-O-rama  project)
 </em>A project for Crowdsourced Street View Imagery assessment/validation</em>
 
-Wiki: https://github.com/kaheetonaa/Pan-O-rama.wiki.git <br>
+Wiki: https://github.com/kaheetonaa/Pan-O-rama.wiki<br>
 
 Presentation: https://docs.google.com/presentation/d/1QTvAqIEw_X0f9hi4JYJbacVpvqu1IW7LEpg4G0sJ9YI/edit#slide=id.g16e523f8eaa_0_5
 
@@ -12,7 +12,7 @@ Firstly, install "Label Studio" by following official instruction at [Label Stud
 Label Studio can be installed both by pip and Docker.<br>
 
 After installing, run Label Studio. If using pip, run <br>
-``label studio``
+``label-studio``
 
 Label Studio should be start at port 8080
 
