@@ -1,98 +1,139 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Restaurant Map</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://unpkg.com/jquery@3.4.1/dist/jquery.min.js"></script>
-    <script src="https://unpkg.com/leaflet@1.8.0-beta.3/dist/leaflet.js"></script>
-    <script src="map.js"></script>
-    <script>
-      var map,
-        ids = {};
-      $(function() {
-        map = POImap.init();
-        map.zoomIn();
-        loadPoi();
-        map.on('moveend', loadPoi);
+
+<head>
+  <title>Restaurant Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://unpkg.com/jquery@3.4.1/dist/jquery.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.8.0-beta.3/dist/leaflet.js"></script>
+  <script src="map.js"></script>
+  <script>
+    var map,
+      ids = {};
+    var OSM_Object = L.geoJson();
+    $(function () {
+      map = POImap.init();
+      map.zoomIn();
+      OSM_Object.addTo(map)
+    });
+
+    function saveToFile() {
+      var a = document.createElement("a");
+    var file = new Blob([JSON.stringify(OSM_Object.toGeoJSON())], {type: "application/json"});
+    a.href = URL.createObjectURL(file);
+    a.download = "geojson";
+    a.click();
+      }
+
+    function loadPoi() {
+      if (map.getZoom() < 14) {
+        return;
+      }
+      // Maki: restaurant-18 from MapBox (//mapbox.com/maki/)
+      var restaurantIcon = L.icon({
+        //iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAXVBMVEX///////9vb2////////////////9ZWVn///9JSUlcXFz///+JiYn///////////////////96enr///9SUlL///9fX19JSUn///////////9NTU2AgID///9ERETA5D9xAAAAHnRSTlMATKY/JkhAyBLwxUqIKhE9AkSZLtk0v/IFBkHmkTPuNN4DAAAAaElEQVR4Xp3INxbDIAAE0V2RlINz3Psf0zR6DwxuPMUUHz+ydI4W9+N23olqGvFmDk/mZF/SF70vGcW4nBIaOqkb3DWhaZTGiUpopcQ1I1AiKmT6gmYWhD/o0QcP+BC/Ny+mBVoTX+0DgJ0JB2LUDeEAAAAASUVORK5CYII=', //black
+        iconUrl:
+          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAXVBMVEUAAAD///+KU1P///////////////9xQED///9fMjJ1QkL///+jbm7///////////////////+XXFz///9pOjr///94RUVfMjL///////////9kNTWdYmL///9bLS2eoyA3AAAAHnRSTlMATKY/JkhAyBLwxUqIKhE9AkSZLtk0v/IFBkHmkTPuNN4DAAAAaElEQVR4Xp3INxbDIAAE0V2RlINz3Psf0zR6DwxuPMUUHz+ydI4W9+N23olqGvFmDk/mZF/SF70vGcW4nBIaOqkb3DWhaZTGiUpopcQ1I1AiKmT6gmYWhD/o0QcP+BC/Ny+mBVoTX+0DgJ0JB2LUDeEAAAAASUVORK5CYII=', //darkred
+        iconSize: new L.Point(18, 18),
+        iconAnchor: new L.Point(9, 9),
+        shadowSize: new L.Point(0, 0)
       });
 
-      function loadPoi() {
-        if (map.getZoom() < 14) {
-          return;
+      var poiUrl = 'https://overpass-api.de/api/interpreter?data=[out:json];way(BBOX)[building];out geom;'.replace(
+        /(BBOX)/g,
+        map.getBounds().toOverpassBBoxString()
+      );
+
+      var poiInfo = function (tags) {
+        var r = $('<table>');
+        for (var key in tags)
+          r.append(
+            $('<tr>')
+              .append($('<th>').text(key))
+              .append($('<td>').text(tags[key]))
+          );
+        return $('<div>')
+          .append(r)
+          .html();
+      };
+
+      function geom2coord(a) {
+        let b = []
+        for (let i of a) {
+          b.push([i.lon, i.lat])
         }
-        // Maki: restaurant-18 from MapBox (//mapbox.com/maki/)
-        var restaurantIcon = L.icon({
-          //iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAXVBMVEX///////9vb2////////////////9ZWVn///9JSUlcXFz///+JiYn///////////////////96enr///9SUlL///9fX19JSUn///////////9NTU2AgID///9ERETA5D9xAAAAHnRSTlMATKY/JkhAyBLwxUqIKhE9AkSZLtk0v/IFBkHmkTPuNN4DAAAAaElEQVR4Xp3INxbDIAAE0V2RlINz3Psf0zR6DwxuPMUUHz+ydI4W9+N23olqGvFmDk/mZF/SF70vGcW4nBIaOqkb3DWhaZTGiUpopcQ1I1AiKmT6gmYWhD/o0QcP+BC/Ny+mBVoTX+0DgJ0JB2LUDeEAAAAASUVORK5CYII=', //black
-          iconUrl:
-            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAXVBMVEUAAAD///+KU1P///////////////9xQED///9fMjJ1QkL///+jbm7///////////////////+XXFz///9pOjr///94RUVfMjL///////////9kNTWdYmL///9bLS2eoyA3AAAAHnRSTlMATKY/JkhAyBLwxUqIKhE9AkSZLtk0v/IFBkHmkTPuNN4DAAAAaElEQVR4Xp3INxbDIAAE0V2RlINz3Psf0zR6DwxuPMUUHz+ydI4W9+N23olqGvFmDk/mZF/SF70vGcW4nBIaOqkb3DWhaZTGiUpopcQ1I1AiKmT6gmYWhD/o0QcP+BC/Ny+mBVoTX+0DgJ0JB2LUDeEAAAAASUVORK5CYII=', //darkred
-          iconSize: new L.Point(18, 18),
-          iconAnchor: new L.Point(9, 9),
-          shadowSize: new L.Point(0, 0)
-        });
 
-        var poiUrl = 'https://overpass-api.de/api/interpreter?data=[out:json];way(BBOX)[highway=residential];out geom;'.replace(
-          /(BBOX)/g,
-          map.getBounds().toOverpassBBoxString()
-        );
+        return b;
+      }
 
-        var poiInfo = function(tags) {
-          var r = $('<table>');
-          for (var key in tags)
-            r.append(
-              $('<tr>')
-                .append($('<th>').text(key))
-                .append($('<td>').text(tags[key]))
-            );
-          return $('<div>')
-            .append(r)
-            .html();
+
+
+
+
+      function clear_osm_object() {
+        OSM_Object = new L.geoJSON({ "type": "Feature" })
+      }
+
+      $.getJSON(poiUrl, function (data) {
+
+        var myStyle = {
+          "color": "#ff7800",
+          "weight": 5,
+          "opacity": 0.65
         };
 
-function geom2coord(a) {
-let b=[]
-for (let i of a) {
-  b.push([i.lon,i.lat])
-}
-
-return b;
-}
-
-        $.getJSON(poiUrl, function(data) {
-
-          var myStyle = {
-    "color": "#ff7800",
-    "weight": 5,
-    "opacity": 0.65
-};
-
-          $.each(data.elements, function(ign, i) {
-            if (i.id in ids) return;
-            ids[i.id] = true;
-            console.log(geom2coord(i.geometry))
-            L.geoJSON([{ "type": "LineString",
-              "coordinates": geom2coord(i.geometry)
-            }],myStyle)
-              .bindPopup(poiInfo(i.tags))
-              .addTo(map);
-          });
+        $.each(data.elements, function (ign, i) {
+          if (i.id in ids) return;
+          ids[i.id] = true;
+          L.geoJSON([{
+            "type": "LineString",
+            "coordinates": geom2coord(i.geometry)
+          }], myStyle)
+            .bindPopup(poiInfo(i.tags))
+            .addTo(OSM_Object);
         });
-      }
-    </script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0-beta.3/dist/leaflet.css" />
-    <style>
-      body {
-        padding: 0;
-        margin: 0;
-      }
-      html,
-      body,
-      #map {
-        height: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
-  </body>
+        console.log(OSM_Object)
+      });
+
+      
+    }
+  </script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0-beta.3/dist/leaflet.css" />
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    html,
+    body,
+    #map {
+      height: 100%;
+    }
+
+    #refreshButton {
+      position: absolute;
+      bottom: 100px;
+      right: 20px;
+      padding: 10px;
+      z-index: 400;
+    }
+
+    #downloadButton {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      z-index: 400;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <button id="refreshButton" onclick="loadPoi()">Refresh Button</button>
+  <button id="downloadButton" onclick="saveToFile()">Download</button>
+</body>
+
 </html>

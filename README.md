@@ -1,5 +1,5 @@
 # PanoraMap(Pan-O-rama  project)
-</em>A project for Crowdsourced Street View Imagery assessment/validation</em>
+</em>A project for Crowdsourced Street View Imagery Assessment for VGI Mapping </em>
 
 Wiki: https://github.com/kaheetonaa/Pan-O-rama.wiki<br>
 
@@ -26,6 +26,7 @@ Distribute Label studio by typing <br>
 ``ngrok http 8080``
 
 ## Building Framework
+
 
 ## Testing Framework
 
