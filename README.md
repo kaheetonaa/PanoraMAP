@@ -1,5 +1,5 @@
 # PanoraMap(Pan-O-rama  project)
-</em>A project for Crowdsourced Street View Imagery Assessment for VGI Mapping </em>
+</em>A project for Urban landscape assessment using crowdsourced geodata </em>
 
 Wiki: https://github.com/kaheetonaa/Pan-O-rama.wiki<br>
 
